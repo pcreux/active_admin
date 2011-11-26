@@ -35,6 +35,17 @@ ActiveAdmin.setup do |config|
   #
   # Default:
   # config.default_namespace = :admin
+  #
+  # You can customize the settings for each namespace by using
+  # a namespace block. For example, to change the site title
+  # within a namespace:
+  #
+  #   config.namespace :admin do |admin|
+  #     admin.site_title = "Custom Admin Title"
+  #   end
+  #
+  # This will ONLY change the title for the admin section. Other
+  # namespaces will continue to use the main "site_title" configuration.
 
   # == User Authentication
   #
@@ -78,14 +89,19 @@ ActiveAdmin.setup do |config|
 
   # == Admin Comments
   #
-  # Admin comments allow you to add comments to any model for admin use
-  #
-  # Admin comments are enabled by default in the default
-  # namespace only. You can turn them on in a namesapce
-  # by adding them to the comments array.
+  # Admin comments allow you to add comments to any model for admin use.
+  # Admin comments are enabled by default.
   #
   # Default:
-  # config.allow_comments_in = [:admin]
+  # config.allow_comments = true
+  #
+  # You can turn them on and off for any given namespace by using a
+  # namespace config block.
+  #
+  # Eg:
+  #   config.namespace :without_comments do |without_comments|
+  #     without_comments.allow_comments = false
+  #   end
 
 
   # == Controller Filters
