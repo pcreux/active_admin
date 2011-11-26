@@ -22,7 +22,7 @@ describe ActiveAdmin::Namespace do
     it "should have an empty menu" do
       namespace.menu.items.should be_empty
     end
-  end
+  end # context "when new"
 
   describe "settings" do
     let(:namespace){ ActiveAdmin::Namespace.new(application, :admin) }

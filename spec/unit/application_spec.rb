@@ -93,8 +93,17 @@ describe ActiveAdmin::Application do
     end
   end
 
-  describe "adding an inheritable setting" do
+  describe "#register_page" do
+    it "finds or create the namespace and register the page to it" do
+      namespace = mock
+      application.should_receive(:find_or_create_namespace).with("public").and_return namespace
+      namespace.should_receive(:register_page).with("My Page", {:namespace => "public"})
 
+      application.register_page("My Page", :namespace => "public")
+    end
+  end
+
+  describe "adding an inheritable setting" do
     it "should add a setting to Application and Namespace" do
       ActiveAdmin::Application.inheritable_setting :inheritable_setting, "inheritable_setting"
       app = ActiveAdmin::Application.new
@@ -102,7 +111,6 @@ describe ActiveAdmin::Application do
       ns = ActiveAdmin::Namespace.new(app, :admin)
       ns.inheritable_setting.should == "inheritable_setting"
     end
-
   end
 
   describe "#namespace" do
