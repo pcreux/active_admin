@@ -24,5 +24,14 @@ module ActiveAdmin
     def resource_name
       name
     end
+
+    def internal_resource_name
+      if @options[:name]
+        @options[:name].underscore
+      else
+        name
+      end
+    end
+
   end
 end

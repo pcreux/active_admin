@@ -15,6 +15,15 @@ module ActiveAdmin
         @plural_resource_name ||= resource_name.pluralize
       end
 
+      def internal_resource_name
+        @internal_resource_name ||= if @options[:as]
+          @options[:as].gsub(' ', '').underscore.singularize
+        else
+          resource.name.gsub('::','').underscore
+        end
+      end
+
+
       private
 
       # @return [String] Titleized human name via ActiveRecord I18n or nil

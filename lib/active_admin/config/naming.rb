@@ -20,9 +20,14 @@ module ActiveAdmin
         plural_resource_name.titleize.gsub(' ', '')
       end
 
+      def plural_camelized_internal_resource_name
+        internal_resource_name.titleize.pluralize.gsub(' ', '')
+      end
+
+
       # An underscored safe representation internally for this resource
       def underscored_resource_name
-        camelized_resource_name.underscore
+        internal_resource_name
       end
 
       # Returns the plural and underscored version of this resource. Useful for element id's.
