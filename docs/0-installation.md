@@ -40,13 +40,11 @@ are created.
 
 ## Upgrading
 
-To upgrade Active Admin, simply update the version number in your Gemfile, then
-run the assets generator:
+To upgrade Active Admin, simply update the version number in your Gemfile.
+
+Re-generate assets if you don't use the asset pipeline:
 
     $> rails generate active_admin:assets
-
-This command makes sure you have all the latest assets and your installation is
-up to date. Each time you upgrade Active Admin, you should run this command.
 
 ## will_paginate compatibility
 
