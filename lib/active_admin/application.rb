@@ -257,9 +257,15 @@ module ActiveAdmin
       end
 
       Rails.application.config.after_initialize do
-        ActionDispatch::Reloader.to_prepare do
+        dirs = Hash[ load_paths.map { |path| [path, [:rb]] } ]
+
+        watcher = Rails.application.config.file_watcher.new([], dirs) do
           ActiveAdmin.application.unload!
           Rails.application.reload_routes!
+        end
+
+        ActionDispatch::Reloader.to_prepare do
+          watcher.execute_if_updated
         end
       end
     end
