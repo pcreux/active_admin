@@ -190,6 +190,11 @@ module ActiveAdmin
       end
     end
 
+    def reload!
+      unload!
+      load!
+    end
+
     def load(file)
       DatabaseHitDuringLoad.capture{ super }
     end
@@ -246,26 +251,26 @@ module ActiveAdmin
       Rails.application.config.eager_load_paths  -= load_paths
     end
 
-    # Hooks the app/admin directory into our Rails Engine's +watchable_dirs+, so the
-    # files are automatically reloaded in your development environment.
-    #
-    # If files have changed on disk, we forcibly unload all AA configurations, and
-    # tell the host application to redraw routes (triggering AA itself to reload).
+    # Reload ActiveAdmin when any AA or Rails files changes
+    # Reload routes when any AA files changes
     def attach_reloader
-      load_paths.each do |path|
-        ActiveAdmin::Engine.config.watchable_dirs[path] = [:rb]
-      end
+      Rails.application.config.after_initialize do |app|
+        app_files, app_dirs = app.watchable_args
+        admin_dirs = Hash[ load_paths.map { |path| [path, [:rb]] } ]
 
-      Rails.application.config.after_initialize do
-        dirs = Hash[ load_paths.map { |path| [path, [:rb]] } ]
-
-        watcher = Rails.application.config.file_watcher.new([], dirs) do
-          ActiveAdmin.application.unload!
-          Rails.application.reload_routes!
+        active_admin_reloader = app.config.file_watcher.new(app_files, app_dirs.merge(admin_dirs)) do
+          ActiveAdmin.application.reload!
         end
+        app.reloaders << active_admin_reloader
+
+        routes_reloader = app.config.file_watcher.new([], admin_dirs) do
+          app.reload_routes!
+        end
+        app.reloaders << routes_reloader
 
         ActionDispatch::Reloader.to_prepare do
-          watcher.execute_if_updated
+          active_admin_reloader.execute_if_updated
+          routes_reloader.execute_if_updated
         end
       end
     end
